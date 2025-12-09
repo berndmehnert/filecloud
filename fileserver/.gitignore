@@ -1,0 +1,4 @@
+storage/*
+files.db
+main
+go.sum

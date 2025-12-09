@@ -1,0 +1,10 @@
+    <section class="listing">
+      <p class="listing-heading">{{ fileMeta().filename }}</p>
+      <img
+        class="listing-photo"
+        src="/assets/symbol.svg"
+        alt="Exterior photo of {{ fileMeta().filename }}"
+        crossorigin
+      />
+      <p class="listing-location">{{ fileMeta().size }}, {{ fileMeta().created_at }}</p>
+    </section>
