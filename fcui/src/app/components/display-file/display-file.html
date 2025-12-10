@@ -1,10 +1,10 @@
-    <section class="listing">
-      <p class="listing-heading">{{ fileMeta().filename }}</p>
+    <section class="file-display" (click) = "handleClick()">
+      <p class="file-display-heading">{{ fileMeta().filename }}</p>
       <img
-        class="listing-photo"
+        class="file-display-photo"
         src="/assets/symbol.svg"
         alt="Exterior photo of {{ fileMeta().filename }}"
         crossorigin
       />
-      <p class="listing-location">Size: {{ fileMeta().size }}, Uploaded: {{ fileMeta().created_at | date:'short' }}</p>
+      <p class="file-display-file-info">Size: {{ fileMeta().size | fileSize }}, Uploaded: {{ fileMeta().created_at | date:'short' }}</p>
     </section>
