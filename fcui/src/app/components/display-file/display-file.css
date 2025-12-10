@@ -10,9 +10,9 @@
   padding: 10px 10px 10px 10px;
 }
 .listing-photo {
-  height: 50px;
+  height: 70px;
   width: 100%;
-  object-fit: cover;
+  object-fit: fill;
   border-radius: 20px 20px 0 0;
 }
 .listing-location {

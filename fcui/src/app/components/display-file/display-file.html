@@ -6,5 +6,5 @@
         alt="Exterior photo of {{ fileMeta().filename }}"
         crossorigin
       />
-      <p class="listing-location">{{ fileMeta().size }}, {{ fileMeta().created_at }}</p>
+      <p class="listing-location">Size: {{ fileMeta().size }}, Uploaded: {{ fileMeta().created_at | date:'short' }}</p>
     </section>
