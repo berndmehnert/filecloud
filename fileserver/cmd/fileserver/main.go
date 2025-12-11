@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"example.com/filecloud/internal/handler"
+	"example.com/filecloud/internal/middleware"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
@@ -33,17 +34,16 @@ func main() {
 	}
 
 	r := chi.NewRouter()
+	r.Use(middleware.CorsMiddleware)
+
 	r.Post("/upload", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
 		handler.HandleUpload(w, r, db)
 	})
 	r.Get("/files/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
 		handler.HandleDownload(w, r, db)
 	})
 	secret := []byte("replace-with-secure-random-secret")
 	r.Get("/api/files", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
 		handler.HandleListFiles(w, r, db, secret)
 	})
 
