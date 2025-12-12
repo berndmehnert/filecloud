@@ -32,3 +32,9 @@ section.file-display a::after {
   content: "\203A";
   margin-left: 5px;
 }
+
+section.file-display :hover {
+  cursor: pointer;
+} 
+
+

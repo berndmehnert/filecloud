@@ -14,7 +14,7 @@ export class FileService {
     return this.http.get<FileMetaPage>(`${this.base}/api/files`);
   }
 
-  download(id: number): string {
-    return `${this.base}/files/${id}`;
+  download(id: number): Observable<Blob> {
+    return this.http.get<Blob>(`${this.base}/files/${id}`, { responseType: 'blob' as 'json' });
   }
 }
