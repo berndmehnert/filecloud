@@ -14,6 +14,6 @@ export class DisplayFile {
     fileMeta = input.required<FileMeta>();
 
     handleClick() {
-      let size:number = this.fileMeta().size;
+      console.log('File clicked:', this.fileMeta().filename);
     }
 }
