@@ -1,10 +1,28 @@
 <main>
-  <a [routerLink]="['/']">
-    <header class="brand-name">
-      <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true" />
-    </header>
-  </a>
-  <section class="content">
+
+  <header class="navbar navbar-expand-lg bd-navbar bg-body-secondary sticky-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <!-- left area (can be empty or put nav brand/links) -->
+      <div class="d-flex align-items-center" style="min-width:120px;">
+        <a [routerLink]="['/']">
+          <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true" />
+        </a>
+      </div>
+
+      <!-- centered input -->
+      <div class="d-flex justify-content-center flex-grow-1">
+        <form [formGroup]="filterInput" (ngSubmit)="handleSubmit()">
+          <input  formControlName="name" class="rounded-pill form-control m-2" type="text" placeholder="Filter by filename" style="width:400px;">
+        </form>
+      </div>
+
+      <!-- right area -->
+      <div class="d-flex align-items-center" style="min-width:120px;">
+        <!-- optional right content -->
+      </div>
+    </div>
+  </header>
+  <section class="container">
     <router-outlet />
   </section>
 </main>

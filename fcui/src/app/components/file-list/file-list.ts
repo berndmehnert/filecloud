@@ -2,6 +2,7 @@ import { Component, inject } from "@angular/core";
 import { DisplayFile } from "../display-file/display-file";
 import { FileService } from "../../file-service";
 import { FileMeta } from "../../models/file-meta.model";
+import { SharedInputService } from "../../shared-input-service";
 
 
 @Component({
@@ -14,16 +15,14 @@ import { FileMeta } from "../../models/file-meta.model";
 export class FileList {
   filteredFiles: FileMeta[] = [];
   fs = inject(FileService);
+  sharedInputService = inject(SharedInputService);
   
   constructor() { 
-    this.fs.list().subscribe(page => {
+    this.fs.list('ern').subscribe(page => {
       this.filteredFiles = page.items;
     });
   }
 
   filterResults(query: string) {
-   // this.fs.search(query).subscribe(page => {
-    //  this.filteredFiles = page.items;
-    //});
   }
 }
