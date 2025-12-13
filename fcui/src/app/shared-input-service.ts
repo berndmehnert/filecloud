@@ -10,4 +10,8 @@ export class SharedInputService {
   updateInput(value: string): void {
     this.inputValue.set(value);
   }
+
+  getInput(): string {
+    return this.inputValue();
+  }
 }

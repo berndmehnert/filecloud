@@ -1,5 +1,5 @@
 <section class="container text-center row-cols-auto">
-    @for(file of filteredFiles; track $index) {
+    @for(file of filteredFiles(); track $index) {
         <app-display-file [fileMeta]="file" />
     }
 </section>

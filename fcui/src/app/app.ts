@@ -17,9 +17,7 @@ export class App {
   });
 
   handleSubmit() {
-    if (this.filterInput.value.name && this.filterInput.value.name.length > 0) {
-      this.sharedInputService.inputValue.set(this.filterInput.value.name);
-    }
+    this.sharedInputService.updateInput(this.filterInput.value.name || '');
     this.filterInput.reset();
   }
 }
