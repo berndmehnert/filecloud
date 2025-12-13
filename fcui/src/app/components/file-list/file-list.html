@@ -1,5 +1,7 @@
-<section class="container text-center row-cols-auto">
-    @for(file of filteredFiles(); track $index) {
-        <app-display-file [fileMeta]="file" />
-    }
+<section class="container">
+    <div class="d-flex flex-wrap gap-3 justify-content-start">
+        @for(file of filteredFiles(); track $index) {
+            <app-display-file [fileMeta]="file" />
+        }
+    </div>
 </section>

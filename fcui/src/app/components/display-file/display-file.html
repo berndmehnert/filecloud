@@ -1,10 +1,10 @@
-    <section class="card p-1 m-2" (click) = "handleClick()">
-      <p class="file-display-heading">{{ fileMeta().filename }}</p>
+    <section class="card p-1 m-2 text-bg-light" (click) = "handleClick()">
+      <p class="file-display-heading">{{ fileMeta().filename }} ({{ fileMeta().size | fileSize }})</p>
       <img
         class="file-display-photo"
         src="/assets/symbol.svg"
         alt="Exterior photo of {{ fileMeta().filename }}"
         crossorigin
       />
-      <p class="file-display-file-info">Size: {{ fileMeta().size | fileSize }}, Uploaded: {{ fileMeta().created_at | date:'short' }}</p>
+      <p class="file-display-file-info">Uploaded: {{ fileMeta().created_at | date:'short' }}</p>
     </section>

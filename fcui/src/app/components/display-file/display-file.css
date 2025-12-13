@@ -1,3 +1,7 @@
 .file-display-photo {
   height: 50px;
 }
+
+:host {
+  display: inline-block;
+}
