@@ -1,0 +1,28 @@
+  <div class="modal-header">
+      <h4 class="modal-title">{{ title() }}</h4>
+      <button type="button" class="btn-close" 
+              (click)="activeModal.dismiss('Cross click')">
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <p>{{ message() }}</p>
+      
+      @if (showWarning()) {
+        <div class="alert alert-warning">
+          ⚠️ This action cannot be undone!
+        </div>
+      }
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              (click)="activeModal.dismiss('Cancel')">
+        Cancel
+      </button>
+      <button type="button" class="btn" 
+              [class]="confirmBtnClass()"
+              (click)="onConfirm()">
+        {{ confirmText() }}
+      </button>
+    </div>
