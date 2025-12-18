@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { SharedInputService } from './shared-input-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, ReactiveFormsModule],
+  imports: [RouterOutlet, ReactiveFormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FileMeta, FileMetaPage } from './models/file-meta.model';
+import { FileMetaPage } from './models/file-meta.model';
 
 @Injectable({
   providedIn: 'root',
