@@ -5,3 +5,11 @@
 :host {
   display: inline-block;
 }
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+img {
+  cursor: pointer;
+}

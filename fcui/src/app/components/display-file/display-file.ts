@@ -3,13 +3,19 @@ import { FileMeta } from '../../models/file-meta.model';
 import { DatePipe } from '@angular/common';
 import { FileSizePipe } from '../../file-size-pipe';
 import { FileService } from '../../file-service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal, NgbDropdownToggle,
+  NgbDropdownMenu,
+  NgbDropdownItem,
+  NgbDropdownButtonItem,
+  NgbDropdown,
+} from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 import { ConfirmDialogResultModel } from '../../models/confirm-dialog-result.model';
 
 @Component({
   selector: 'app-display-file',
-  imports: [DatePipe, FileSizePipe],
+  imports: [DatePipe, FileSizePipe, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem, NgbDropdownButtonItem],
   templateUrl: './display-file.html',
   styleUrl: './display-file.css',
   standalone: true,
@@ -39,10 +45,16 @@ export class DisplayFile {
           this.downloadBlob(blob, this.fileMeta().filename);
         });
       }// Perform delete action here
-      } catch (e) {
-        console.log('Cancelled');
-      }
+    } catch (e) {
+      console.log('Cancelled');
     }
+  }
+
+  handleDownloadClick() {
+    this.fileService.download(this.fileMeta().id).subscribe(blob => {
+      this.downloadBlob(blob, this.fileMeta().filename);
+    });
+  }
 
   private downloadBlob(data: Blob, filename = 'file.bin') {
     const url = URL.createObjectURL(data);
