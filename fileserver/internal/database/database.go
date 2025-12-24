@@ -29,7 +29,6 @@ func New(dbPath string) (*sqlx.DB, error) {
 }
 
 func Migrate(db *sqlx.DB) error {
-	// golang-migrate needs *sql.DB, sqlx provides it via .DB
 	driver, err := sqlite3.WithInstance(db.DB, &sqlite3.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to create migration driver: %w", err)

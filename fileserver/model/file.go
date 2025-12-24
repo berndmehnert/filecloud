@@ -13,3 +13,11 @@ type FileMeta struct {
 	Path      string    `db:"path" json:"path"`
 	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
+
+func (f *FileMeta) IsImage() bool {
+	switch f.Mime {
+	case "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp":
+		return true
+	}
+	return false
+}
