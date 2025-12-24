@@ -1,16 +1,15 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"os"
 
+	"example.com/filecloud/internal/database"
 	"example.com/filecloud/internal/handler"
 	"example.com/filecloud/internal/middleware"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jmoiron/sqlx"
 	_ "modernc.org/sqlite"
 )
 
@@ -24,13 +23,14 @@ func main() {
 		log.Fatalf("creating storage dir: %v", err)
 	}
 
-	db, err := sqlx.Connect("sqlite", databaseFile)
+	db, err := database.New(databaseFile)
 	if err != nil {
 		log.Fatalf("open db: %v", err)
 	}
 	defer db.Close()
-	if err := migrate(db.DB); err != nil {
-		log.Fatalf("migrate: %v", err)
+
+	if err := database.Migrate(db); err != nil {
+		log.Fatalf("Failed to migrate: %v", err)
 	}
 
 	r := chi.NewRouter()
@@ -52,20 +52,4 @@ func main() {
 	if err := http.ListenAndServe(addr, r); err != nil {
 		log.Fatalf("server: %v", err)
 	}
-}
-
-func migrate(db *sql.DB) error {
-	schema := `
-CREATE TABLE IF NOT EXISTS files (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  filename TEXT NOT NULL,
-  size INTEGER NOT NULL,
-  mime TEXT,
-  checksum TEXT,
-  path TEXT NOT NULL,
-  created_at DATETIME NOT NULL
-);
-`
-	_, err := db.Exec(schema)
-	return err
 }
