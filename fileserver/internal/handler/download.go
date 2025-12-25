@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"example.com/filecloud/model"
+	"example.com/filecloud/internal/model"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"

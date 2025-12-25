@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -12,7 +13,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"example.com/filecloud/model"
+	"example.com/filecloud/internal/model"
+	"example.com/filecloud/internal/service"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -22,13 +24,25 @@ const (
 	storageDir    = "./storage"
 )
 
-func HandleUpload(w http.ResponseWriter, r *http.Request, db *sqlx.DB) {
+// UploadHandler holds dependencies
+type UploadHandler struct {
+	DB               *sqlx.DB
+	ThumbnailService *service.ThumbnailService
+}
+
+func (h *UploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	ctx := r.Context()
 	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
-	if err := r.ParseMultipartForm(32 << 20); err != nil { // 32 MiB memory
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
 		http.Error(w, "invalid multipart form: "+err.Error(), http.StatusBadRequest)
 		return
 	}
+
 	file, fh, err := r.FormFile("file")
 	if err != nil {
 		http.Error(w, "missing file field: "+err.Error(), http.StatusBadRequest)
@@ -42,17 +56,41 @@ func HandleUpload(w http.ResponseWriter, r *http.Request, db *sqlx.DB) {
 		return
 	}
 
-	result, err := db.NamedExecContext(ctx, `
-		INSERT INTO files (filename, size, mime, checksum, path, created_at)
-		VALUES (:filename, :size, :mime, :checksum, :path, :created_at)
+	// Set initial thumbnail status
+	if meta.IsImage() {
+		meta.ThumbnailStatus = "pending"
+	} else {
+		meta.ThumbnailStatus = "not_applicable"
+	}
+
+	result, err := h.DB.NamedExecContext(ctx, `
+		INSERT INTO files (filename, size, mime, checksum, path, created_at, thumbnail_status)
+		VALUES (:filename, :size, :mime, :checksum, :path, :created_at, :thumbnail_status)
 	`, meta)
 	if err != nil {
+		os.Remove(meta.Path) // Cleanup file on DB failure
 		http.Error(w, "db insert: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	id, _ := result.LastInsertId()
+	meta.ID = id
+
+	// Queue thumbnail generation (non-blocking)
+	if meta.IsImage() {
+		h.ThumbnailService.Queue(id, meta.Path, meta.Filename)
+	}
+
+	// Return response
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"id":%d,"filename":"%s","size":%d,"checksum":"%s"}`, id, meta.Filename, meta.Size, meta.Checksum)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]any{
+		"id":               id,
+		"filename":         meta.Filename,
+		"size":             meta.Size,
+		"checksum":         meta.Checksum,
+		"thumbnail_status": meta.ThumbnailStatus,
+	})
 }
 
 // helper: ensure storage dir exists (call from init or main)

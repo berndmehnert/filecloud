@@ -8,8 +8,10 @@ import (
 	"example.com/filecloud/internal/database"
 	"example.com/filecloud/internal/handler"
 	"example.com/filecloud/internal/middleware"
+	"example.com/filecloud/internal/service"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jmoiron/sqlx"
 	_ "modernc.org/sqlite"
 )
 
@@ -29,19 +31,35 @@ func main() {
 	}
 	defer db.Close()
 
+	// Migration:
 	if err := database.Migrate(db); err != nil {
 		log.Fatalf("Failed to migrate: %v", err)
 	}
 
+	// Routing:
 	r := chi.NewRouter()
 	r.Use(middleware.CorsMiddleware)
 
-	r.Post("/upload", func(w http.ResponseWriter, r *http.Request) {
-		handler.HandleUpload(w, r, db)
-	})
+	// Services:
+	thumbService := service.NewThumbnailService(db, "./storage", 3)
+
+	// Routes:
+	go processPendingThumbnails(db, thumbService)
+
+	uploadHandler := &handler.UploadHandler{
+		DB:               db,
+		ThumbnailService: thumbService,
+	}
+	thumbnailHandler := &handler.ThumbnailHandler{DB: db}
+
+	r.Post("/upload", uploadHandler.ServeHTTP)
+
 	r.Get("/files/{id}", func(w http.ResponseWriter, r *http.Request) {
 		handler.HandleDownload(w, r, db)
 	})
+
+	r.Get("/files/{id}/thumbnail", thumbnailHandler.ServeHTTP)
+
 	secret := []byte("replace-with-secure-random-secret")
 	r.Get("/api/files", func(w http.ResponseWriter, r *http.Request) {
 		handler.HandleListFiles(w, r, db, secret)
@@ -51,5 +69,31 @@ func main() {
 	log.Printf("listening on %s", addr)
 	if err := http.ListenAndServe(addr, r); err != nil {
 		log.Fatalf("server: %v", err)
+	}
+}
+
+func processPendingThumbnails(db *sqlx.DB, ts *service.ThumbnailService) {
+	type pending struct {
+		ID       int64  `db:"id"`
+		Path     string `db:"path"`
+		Filename string `db:"filename"`
+	}
+
+	var files []pending
+	err := db.Select(&files, `
+		SELECT id, path, filename 
+		FROM files 
+		WHERE thumbnail_status = 'pending'
+	`)
+	if err != nil {
+		log.Printf("Failed to get pending thumbnails: %v", err)
+		return
+	}
+
+	if len(files) > 0 {
+		log.Printf("Queueing %d pending thumbnails", len(files))
+		for _, f := range files {
+			ts.Queue(f.ID, f.Path, f.Filename)
+		}
 	}
 }

@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"example.com/filecloud/model"
+	"example.com/filecloud/internal/model"
 
 	"github.com/jmoiron/sqlx"
 )
