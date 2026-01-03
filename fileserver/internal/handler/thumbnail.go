@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"net/http"
 	"strconv"
-	"strings"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -15,13 +15,8 @@ type ThumbnailHandler struct {
 }
 
 func (h *ThumbnailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-	if len(parts) < 3 {
-		http.Error(w, "invalid path", http.StatusBadRequest)
-		return
-	}
-
-	id, err := strconv.ParseInt(parts[2], 10, 64)
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		http.Error(w, "invalid id", http.StatusBadRequest)
 		return
