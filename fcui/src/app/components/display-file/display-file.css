@@ -1,5 +1,8 @@
 .file-display-photo {
-  height: 50px;
+  height: 100px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+  object-fit: contain;
 }
 
 :host {
@@ -12,4 +15,8 @@
 
 img {
   cursor: pointer;
+}
+
+p {
+  margin-bottom: 0;
 }

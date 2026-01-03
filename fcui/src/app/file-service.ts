@@ -59,4 +59,8 @@ export class FileService {
       })
     );
   }
+  getThumbnailUrl(fileId: number): string {
+    console.log(`${this.base}/files/${fileId}/thumbnail`);
+    return `${this.base}/files/${fileId}/thumbnail`;
+  }
 }

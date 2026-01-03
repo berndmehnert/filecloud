@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FileMeta } from '../../models/file-meta.model';
 import { DatePipe } from '@angular/common';
 import { FileSizePipe } from '../../file-size-pipe';
@@ -24,6 +24,7 @@ export class DisplayFile {
   fileMeta = input.required<FileMeta>();
   fileService = inject(FileService);
   private modalService = inject(NgbModal);
+  thumbnailUrl = computed(() => this.fileService.getThumbnailUrl(this.fileMeta().id));
 
   async handleClick() {
     const modalRef = this.modalService.open(ConfirmDialog, {
