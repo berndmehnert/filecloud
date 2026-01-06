@@ -30,8 +30,8 @@ curl -OJ http://localhost:8080/v1/files/123/content
 
 **Core Features**
 - [x] **File Upload:** Implementation of file upload (frontend and backend)
-- [x] **File Download:** Content delivery with proper headers 
-- [ ] **File Deletion:** Implementation of handler for `DELETE /v1/files/{id}` plus usage in UI
+- [x] **File Download:** Content delivery with proper headers plus usage in UI
+- [ ] **File Deletion:** Implementation of handler for `DELETE /v1/files/{id}` plus application in UI
 - [ ] **Pagination:** Cursor-based handling for the file list endpoint
 
 **Media Handling**
