@@ -1,4 +1,5 @@
 A little Fileserver/Filecloud project in go, with a separate frontend in Angular/Node.js. 
+![Status](https://img.shields.io/badge/Status-Work_in_Progress-orange)
 
 ### 📋 Fileserver API Reference 
 
@@ -25,12 +26,19 @@ curl -X POST http://localhost:8080/v1/files  -F "file=@/path/to/image.jpg"
 curl -OJ http://localhost:8080/v1/files/123/content
 ```
 
-## TODOS
-- write tests
-- complete file upload (done)
-- complete cursor handling
-- implement file deleting
-- provide thumbnails for file display, for the moment only for images (done)
-- display image thumbnails and for different file types appropriate icons  (partially done)
-- add users + authentication + authorization 
-- extend this document appropriately, in particular, include how everything is run
+### 🚧 Roadmap
+
+**Core Features**
+- [x] **File Upload:** Full stack implementation (Go Backend + Angular UI)
+- [x] **File Download:** Content delivery with proper headers
+- [ ] **File Deletion:** Implementation of handler for `DELETE /v1/files/{id}`
+- [ ] **Pagination:** Cursor-based handling for the file list endpoint
+
+**Media Handling**
+- [x] **Image Thumbnails:** Auto-generation and display in UI
+- [ ] **File Icons:** Fallback icons for non-image file types (PDF, Doc, etc.)
+
+**Security & Quality**
+- [ ] **Auth:** User Authentication and Authorization
+- [ ] **Testing:** Unit and Integration tests
+- [ ] **Documentation:** Setup instructions for running the full stack
