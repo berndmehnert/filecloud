@@ -24,18 +24,18 @@ export class FileService {
   private base = 'http://localhost:8080';
   
   list(filter : string): Observable<FileMetaPage> {
-    return this.http.get<FileMetaPage>(`${this.base}/api/files?q=${filter}`);
+    return this.http.get<FileMetaPage>(`${this.base}/v1/files?q=${filter}`);
   }
 
   download(id: number): Observable<Blob> {
-    return this.http.get<Blob>(`${this.base}/files/${id}`, { responseType: 'blob' as 'json' });
+    return this.http.get<Blob>(`${this.base}/v1/files/${id}/content`, { responseType: 'blob' as 'json' });
   }
 
   upload(file: File): Observable<UploadProgress> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<UploadResponse>(this.base + '/upload', formData, {
+    return this.http.post<UploadResponse>(this.base + '/v1/files', formData, {
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -60,7 +60,7 @@ export class FileService {
     );
   }
   getThumbnailUrl(fileId: number): string {
-    console.log(`${this.base}/files/${fileId}/thumbnail`);
-    return `${this.base}/files/${fileId}/thumbnail`;
+    console.log(`${this.base}/v1/files/${fileId}/thumbnail`);
+    return `${this.base}/v1/files/${fileId}/thumbnail`;
   }
 }

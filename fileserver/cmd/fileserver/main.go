@@ -42,27 +42,29 @@ func main() {
 
 	// Services:
 	thumbService := service.NewThumbnailService(db, "./storage", 3)
-
-	// Routes:
 	go processPendingThumbnails(db, thumbService)
 
-	uploadHandler := &handler.UploadHandler{
-		DB:               db,
-		ThumbnailService: thumbService,
-	}
-	thumbnailHandler := &handler.ThumbnailHandler{DB: db}
+	// API version 1 group
+	r.Route("/v1", func(r chi.Router) {
 
-	r.Post("/upload", uploadHandler.ServeHTTP)
+		uploadHandler := &handler.UploadHandler{
+			DB:               db,
+			ThumbnailService: thumbService,
+		}
+		thumbnailHandler := &handler.ThumbnailHandler{DB: db}
 
-	r.Get("/files/{id}", func(w http.ResponseWriter, r *http.Request) {
-		handler.HandleDownload(w, r, db)
-	})
+		r.Post("/files", uploadHandler.ServeHTTP)
 
-	r.Get("/files/{id}/thumbnail", thumbnailHandler.ServeHTTP)
+		r.Get("/files/{id}/content", func(w http.ResponseWriter, r *http.Request) {
+			handler.HandleDownload(w, r, db)
+		})
 
-	secret := []byte("replace-with-secure-random-secret")
-	r.Get("/api/files", func(w http.ResponseWriter, r *http.Request) {
-		handler.HandleListFiles(w, r, db, secret)
+		r.Get("/files/{id}/thumbnail", thumbnailHandler.ServeHTTP)
+
+		secret := []byte("replace-with-secure-random-secret")
+		r.Get("/files", func(w http.ResponseWriter, r *http.Request) {
+			handler.HandleListFiles(w, r, db, secret)
+		})
 	})
 
 	addr := ":8080"
