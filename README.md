@@ -29,9 +29,9 @@ curl -OJ http://localhost:8080/v1/files/123/content
 ### 🚧 Roadmap
 
 **Core Features**
-- [x] **File Upload:** Full stack implementation (Go Backend + Angular UI)
-- [x] **File Download:** Content delivery with proper headers
-- [ ] **File Deletion:** Implementation of handler for `DELETE /v1/files/{id}`
+- [x] **File Upload:** Implementation of file upload (frontend and backend)
+- [x] **File Download:** Content delivery with proper headers 
+- [ ] **File Deletion:** Implementation of handler for `DELETE /v1/files/{id}` plus usage in UI
 - [ ] **Pagination:** Cursor-based handling for the file list endpoint
 
 **Media Handling**
