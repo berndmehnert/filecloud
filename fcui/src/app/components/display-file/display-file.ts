@@ -13,7 +13,6 @@ import {
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 import { ConfirmDialogResultModel } from '../../models/confirm-dialog-result.model';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
 
 export interface ThumbnailState {
   status: 'loading' | 'ready' | 'pending' | 'processing' | 'failed' | 'not-found';
@@ -32,7 +31,6 @@ export class DisplayFile {
   fileService = inject(FileService);
   private modalService = inject(NgbModal);
   private http = inject(HttpClient);
-  private sanitizer = inject(DomSanitizer);
 
   state = signal<ThumbnailState>({ status: 'loading' });
 
