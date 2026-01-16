@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { filter, map, Observable } from 'rxjs';
 import { FileMetaPage } from './models/file-meta.model';
 
@@ -60,7 +60,6 @@ export class FileService {
     );
   }
   getThumbnailUrl(fileId: number): string {
-    console.log(`${this.base}/v1/files/${fileId}/thumbnail`);
     return `${this.base}/v1/files/${fileId}/thumbnail`;
   }
 }

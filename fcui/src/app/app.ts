@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SharedInputService } from './shared-input-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +21,13 @@ export class App {
     name: new FormControl(''),
   });
 
+  constructor() {
+    effect(() => {
+      const isUploading = this.sharedInputService.getUploadingStatus();
+      this.uploading.set(isUploading);
+    });
+  }
+
   handleSubmit() {
     this.sharedInputService.updateInput(this.filterInput.value.name || '');
     this.filterInput.reset();
@@ -36,19 +43,19 @@ export class App {
     input.value = '';
 
     // Upload immediately
-    this.uploading.set(true);
+    this.sharedInputService.updateUploadingStatus(true);
 
     this.fileService.upload(file).subscribe({
       next: (status) => {
         this.progress.set(status.percent);
         if (status.complete) {
-          this.uploading.set(false);
+          this.sharedInputService.updateUploadingStatus(false);
           console.log('Uploaded:', status.response);
         }
       },
       error: (err) => {
         console.error('Upload failed:', err);
-        this.uploading.set(false);
+        this.sharedInputService.updateUploadingStatus(false);
       }
     });
   }

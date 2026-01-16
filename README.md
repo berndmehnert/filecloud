@@ -1,4 +1,5 @@
-A little Fileserver/Filecloud project in go, with a separate frontend in Angular/Node.js. 
+A little Fileserver/Filecloud project in go, with a separate frontend in Angular/Node.js.
+
 ![Status](https://img.shields.io/badge/Status-Work_in_Progress-orange)
 
 ### 📋 Fileserver API Reference 

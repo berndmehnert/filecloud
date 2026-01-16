@@ -4,6 +4,13 @@ import { FileService } from "../../file-service";
 import { FileMeta } from "../../models/file-meta.model";
 import { SharedInputService } from "../../shared-input-service";
 
+type ThumbnailState = 
+  | { status: 'loading' }
+  | { status: 'ready'; url: SafeUrl }
+  | { status: 'pending' }
+  | { status: 'processing' }
+  | { status: 'failed' }
+  | { status: 'not-found' };
 
 @Component({
   selector: 'app-file-list',
@@ -16,14 +23,24 @@ export class FileList {
   filteredFiles = signal<FileMeta[]>([]);
   fs = inject(FileService);
   sharedInputService = inject(SharedInputService);
+  currentSearchTerm = signal(''); 
 
   constructor() {
     effect(() => {
-      const searchTerm = this.sharedInputService.getInput();
-      console.log('trigger', ' ', searchTerm);
-      this.fs.list(searchTerm).subscribe(page => {
-        this.filteredFiles.set(page.items);
-      });
+      this.currentSearchTerm.set(this.sharedInputService.getInput());
+      this.updateFileList();  
+    });
+    effect(() => {
+      const isuploaded = this.sharedInputService.getUploadingStatus();
+      if (isuploaded === false) {
+        this.updateFileList();
+      }
+    });
+  }
+
+  updateFileList() {
+    this.fs.list(this.currentSearchTerm()).subscribe(page => {
+      this.filteredFiles.set(page.items);
     });
   }
 }

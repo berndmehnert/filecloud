@@ -34,7 +34,7 @@
   <div class="text-center px-4">
     <p class="file-display-heading">{{ fileMeta().filename }} ({{ fileMeta().size | fileSize }})</p>
     @if(fileMeta().mime.startsWith('image/')) {
-    <img (click)="handleClick()" class="file-display-photo rounded" [src]="thumbnailUrl()"
+    <img (click)="handleClick()" class="file-display-photo rounded" [src]="state().status === 'ready' ? state().url : '/assets/file.svg'"
       alt="Exterior photo of {{ fileMeta().filename }}" crossorigin />
     } @else {
     <img (click)="handleClick()" class="file-display-photo" src="/assets/file.svg"

@@ -55,6 +55,10 @@ func main() {
 
 		r.Post("/files", uploadHandler.ServeHTTP)
 
+		r.Delete("/files/{id}", func(w http.ResponseWriter, r *http.Request) {
+			handler.HandleDelete(w, r, db)
+		})
+
 		r.Get("/files/{id}/content", func(w http.ResponseWriter, r *http.Request) {
 			handler.HandleDownload(w, r, db)
 		})
