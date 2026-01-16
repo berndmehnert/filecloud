@@ -13,11 +13,11 @@ import {
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 import { ConfirmDialogResultModel } from '../../models/confirm-dialog-result.model';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface ThumbnailState {
   status: 'loading' | 'ready' | 'pending' | 'processing' | 'failed' | 'not-found';
-  url?: SafeUrl;
+  url?: string;
 }
 
 @Component({
@@ -38,7 +38,9 @@ export class DisplayFile {
 
   constructor() {
     effect(() => {
-      this.loadThumbnail(this.fileMeta().id);
+      if (this.fileMeta().mime.startsWith('image/')) {
+        this.loadThumbnail(this.fileMeta().id);
+      }
     });
   }
 
@@ -80,15 +82,13 @@ export class DisplayFile {
       responseType: 'blob'
     }).subscribe({
       next: (response) => {
-        console.log('Thumbnail response status:', response);
         if (response.status === HttpStatusCode.Accepted) {
           // 202 - Check the JSON status
           this.parseStatusResponse(response.body!);
         } else {
           // 200 - It's an image
           const objectUrl = URL.createObjectURL(response.body!);
-          const safeUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
-          this.state.set({ status: 'ready', url: safeUrl });
+          this.state.set({ status: 'ready', url: objectUrl });
         }
       },
       error: (err) => {

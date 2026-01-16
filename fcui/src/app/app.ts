@@ -2,7 +2,7 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SharedInputService } from './shared-input-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FileService, UploadResponse } from './file-service';
+import { FileService } from './file-service';
 
 @Component({
   selector: 'app-root',
@@ -50,7 +50,6 @@ export class App {
         this.progress.set(status.percent);
         if (status.complete) {
           this.sharedInputService.updateUploadingStatus(false);
-          console.log('Uploaded:', status.response);
         }
       },
       error: (err) => {

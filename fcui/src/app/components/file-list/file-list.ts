@@ -4,14 +4,6 @@ import { FileService } from "../../file-service";
 import { FileMeta } from "../../models/file-meta.model";
 import { SharedInputService } from "../../shared-input-service";
 
-type ThumbnailState = 
-  | { status: 'loading' }
-  | { status: 'ready'; url: SafeUrl }
-  | { status: 'pending' }
-  | { status: 'processing' }
-  | { status: 'failed' }
-  | { status: 'not-found' };
-
 @Component({
   selector: 'app-file-list',
   imports: [DisplayFile],
